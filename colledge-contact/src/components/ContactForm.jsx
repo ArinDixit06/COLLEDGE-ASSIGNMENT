@@ -17,12 +17,11 @@ export default function ContactForm({ onAdd }) {
     phone: false
   });
 
-  // -------- VALIDATION --------
   const nameInvalid = touched.name && form.name.trim().length < 2;
   const emailInvalid = touched.email && !emailRegex.test(form.email);
   const phoneInvalid = touched.phone && !phoneRegex.test(form.phone);
 
-  const isFormValid =
+  const isValid =
     !nameInvalid &&
     !emailInvalid &&
     !phoneInvalid &&
@@ -30,32 +29,33 @@ export default function ContactForm({ onAdd }) {
     form.email &&
     form.phone;
 
-  // -------- HANDLERS --------
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Only digits allowed for phone
     if (name === "phone" && !/^\d*$/.test(value)) return;
 
     setForm((f) => ({ ...f, [name]: value }));
-    setTouched((t) => ({ ...t, [name]: true })); // 👈 validate WHILE typing
+    setTouched((t) => ({ ...t, [name]: true }));
   };
 
-  const handleSubmit = (e) => {
+  const submit = (e) => {
     e.preventDefault();
-    if (!isFormValid) return;
+    if (!isValid) return;
 
     onAdd(form);
     setForm({ name: "", email: "", phone: "", message: "" });
     setTouched({ name: false, email: false, phone: false });
   };
 
+  const base =
+    "w-full rounded-xl px-4 py-3 bg-[#f5f5f7] outline-none border transition";
+
   return (
     <form
-      onSubmit={handleSubmit}
-      className="bg-white rounded-3xl shadow-lg p-6 space-y-4"
+      onSubmit={submit}
+      className="bg-white rounded-3xl shadow p-6 space-y-4"
     >
-      <h2 className="text-lg font-semibold">Add Contact</h2>
+      <h2 className="font-semibold text-lg">Add Contact</h2>
 
       {/* NAME */}
       <div>
@@ -64,9 +64,11 @@ export default function ContactForm({ onAdd }) {
           placeholder="Full Name"
           value={form.name}
           onChange={handleChange}
-          className={`w-full rounded-xl px-4 py-3 bg-[#f5f5f7] outline-none border
-            ${nameInvalid ? "border-red-500" : "border-gray-300"}
-            focus:ring-2 ${nameInvalid ? "focus:ring-red-200" : "focus:ring-blue-500"}`}
+          className={`${base} ${
+            nameInvalid
+              ? "border-red-500 focus-visible:border-red-500"
+              : "border-gray-300 focus-visible:border-blue-500"
+          }`}
         />
         {nameInvalid && (
           <p className="text-sm text-red-500 mt-1">
@@ -77,44 +79,43 @@ export default function ContactForm({ onAdd }) {
 
       {/* EMAIL */}
       <div>
-       <input
-  name="email"
-  placeholder="Email Address"
-  value={form.email}
-  onChange={handleChange}
-  className={`w-full rounded-xl px-4 py-3 bg-[#f5f5f7] outline-none border
-    ${emailInvalid
-      ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200"
-      : "border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-    }`}
-/>
-{emailInvalid && (
-  <p className="text-sm text-red-500 mt-1">
-    Invalid email format
-  </p>
-)}
+        <input
+          name="email"
+          placeholder="Email Address"
+          value={form.email}
+          onChange={handleChange}
+          className={`${base} ${
+            emailInvalid
+              ? "border-red-500 focus-visible:border-red-500"
+              : "border-gray-300 focus-visible:border-blue-500"
+          }`}
+        />
+        {emailInvalid && (
+          <p className="text-sm text-red-500 mt-1">
+            Invalid email format
+          </p>
+        )}
       </div>
 
       {/* PHONE */}
       <div>
         <input
-  name="phone"
-  placeholder="10-digit Phone Number"
-  value={form.phone}
-  onChange={handleChange}
-  maxLength={10}
-  className={`w-full rounded-xl px-4 py-3 bg-[#f5f5f7] outline-none border
-    ${phoneInvalid
-      ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200"
-      : "border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-    }`}
-/>
-{phoneInvalid && (
-  <p className="text-sm text-red-500 mt-1">
-    Invalid phone number (10 digits required)
-  </p>
-)}
-
+          name="phone"
+          placeholder="10-digit Phone Number"
+          value={form.phone}
+          onChange={handleChange}
+          maxLength={10}
+          className={`${base} ${
+            phoneInvalid
+              ? "border-red-500 focus-visible:border-red-500"
+              : "border-gray-300 focus-visible:border-blue-500"
+          }`}
+        />
+        {phoneInvalid && (
+          <p className="text-sm text-red-500 mt-1">
+            Invalid phone number (10 digits required)
+          </p>
+        )}
       </div>
 
       {/* MESSAGE */}
@@ -124,16 +125,13 @@ export default function ContactForm({ onAdd }) {
         value={form.message}
         onChange={handleChange}
         rows={3}
-        className="w-full rounded-xl px-4 py-3 bg-[#f5f5f7] outline-none resize-none border border-gray-300 focus:ring-2 focus:ring-blue-500"
+        className={`${base} border-gray-300 focus-visible:border-blue-500 resize-none`}
       />
 
-      {/* SUBMIT */}
       <button
-        type="submit"
-        disabled={!isFormValid}
-        className="w-full bg-blue-600 text-white py-3 rounded-xl font-medium transition
-                   disabled:bg-gray-300 disabled:cursor-not-allowed
-                   hover:bg-blue-700 active:scale-95"
+        disabled={!isValid}
+        className="w-full bg-blue-600 text-white py-3 rounded-xl font-medium
+                   hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
       >
         Save Contact
       </button>
