@@ -17,18 +17,18 @@ export default function ContactForm({ onAdd }) {
     phone: false
   });
 
-  // -------- VALIDATION STATE --------
+  // -------- VALIDATION --------
+  const nameInvalid = touched.name && form.name.trim().length < 2;
   const emailInvalid = touched.email && !emailRegex.test(form.email);
   const phoneInvalid = touched.phone && !phoneRegex.test(form.phone);
-  const nameInvalid = touched.name && form.name.trim().length < 2;
 
   const isFormValid =
+    !nameInvalid &&
     !emailInvalid &&
     !phoneInvalid &&
-    !nameInvalid &&
+    form.name &&
     form.email &&
-    form.phone &&
-    form.name;
+    form.phone;
 
   // -------- HANDLERS --------
   const handleChange = (e) => {
@@ -38,10 +38,7 @@ export default function ContactForm({ onAdd }) {
     if (name === "phone" && !/^\d*$/.test(value)) return;
 
     setForm((f) => ({ ...f, [name]: value }));
-  };
-
-  const handleBlur = (e) => {
-    setTouched((t) => ({ ...t, [e.target.name]: true }));
+    setTouched((t) => ({ ...t, [name]: true })); // 👈 validate WHILE typing
   };
 
   const handleSubmit = (e) => {
@@ -53,7 +50,6 @@ export default function ContactForm({ onAdd }) {
     setTouched({ name: false, email: false, phone: false });
   };
 
-  // -------- UI --------
   return (
     <form
       onSubmit={handleSubmit}
@@ -68,10 +64,9 @@ export default function ContactForm({ onAdd }) {
           placeholder="Full Name"
           value={form.name}
           onChange={handleChange}
-          onBlur={handleBlur}
           className={`w-full rounded-xl px-4 py-3 bg-[#f5f5f7] outline-none border
-            ${nameInvalid ? "border-red-500" : "border-transparent"}
-            focus:ring-2 focus:ring-blue-500`}
+            ${nameInvalid ? "border-red-500" : "border-gray-300"}
+            focus:ring-2 ${nameInvalid ? "focus:ring-red-200" : "focus:ring-blue-500"}`}
         />
         {nameInvalid && (
           <p className="text-sm text-red-500 mt-1">
@@ -87,10 +82,9 @@ export default function ContactForm({ onAdd }) {
           placeholder="Email Address"
           value={form.email}
           onChange={handleChange}
-          onBlur={handleBlur}
           className={`w-full rounded-xl px-4 py-3 bg-[#f5f5f7] outline-none border
-            ${emailInvalid ? "border-red-500" : "border-transparent"}
-            focus:ring-2 focus:ring-blue-500`}
+            ${emailInvalid ? "border-red-500" : "border-gray-300"}
+            focus:ring-2 ${emailInvalid ? "focus:ring-red-200" : "focus:ring-blue-500"}`}
         />
         {emailInvalid && (
           <p className="text-sm text-red-500 mt-1">
@@ -106,11 +100,10 @@ export default function ContactForm({ onAdd }) {
           placeholder="10-digit Phone Number"
           value={form.phone}
           onChange={handleChange}
-          onBlur={handleBlur}
           maxLength={10}
           className={`w-full rounded-xl px-4 py-3 bg-[#f5f5f7] outline-none border
-            ${phoneInvalid ? "border-red-500" : "border-transparent"}
-            focus:ring-2 focus:ring-blue-500`}
+            ${phoneInvalid ? "border-red-500" : "border-gray-300"}
+            focus:ring-2 ${phoneInvalid ? "focus:ring-red-200" : "focus:ring-blue-500"}`}
         />
         {phoneInvalid && (
           <p className="text-sm text-red-500 mt-1">
@@ -126,8 +119,7 @@ export default function ContactForm({ onAdd }) {
         value={form.message}
         onChange={handleChange}
         rows={3}
-        className="w-full rounded-xl px-4 py-3 bg-[#f5f5f7] outline-none resize-none
-                   border border-transparent focus:ring-2 focus:ring-blue-500"
+        className="w-full rounded-xl px-4 py-3 bg-[#f5f5f7] outline-none resize-none border border-gray-300 focus:ring-2 focus:ring-blue-500"
       />
 
       {/* SUBMIT */}
