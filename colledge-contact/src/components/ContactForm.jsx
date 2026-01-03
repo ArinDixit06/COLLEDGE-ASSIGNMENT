@@ -17,32 +17,24 @@ export default function ContactForm({ onAdd }) {
     phone: false
   });
 
-  // -------- VALIDATION LOGIC --------
-  const errors = {
-    name:
-      touched.name && form.name.trim().length < 2
-        ? "Name must be at least 2 characters"
-        : "",
-    email:
-      touched.email && !emailRegex.test(form.email)
-        ? "Enter a valid email address"
-        : "",
-    phone:
-      touched.phone && !phoneRegex.test(form.phone)
-        ? "Phone number must be exactly 10 digits"
-        : ""
-  };
+  // -------- VALIDATION STATE --------
+  const emailInvalid = touched.email && !emailRegex.test(form.email);
+  const phoneInvalid = touched.phone && !phoneRegex.test(form.phone);
+  const nameInvalid = touched.name && form.name.trim().length < 2;
 
   const isFormValid =
-    form.name.trim().length >= 2 &&
-    emailRegex.test(form.email) &&
-    phoneRegex.test(form.phone);
+    !emailInvalid &&
+    !phoneInvalid &&
+    !nameInvalid &&
+    form.email &&
+    form.phone &&
+    form.name;
 
   // -------- HANDLERS --------
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Allow only digits for phone
+    // Only digits allowed for phone
     if (name === "phone" && !/^\d*$/.test(value)) return;
 
     setForm((f) => ({ ...f, [name]: value }));
@@ -77,14 +69,14 @@ export default function ContactForm({ onAdd }) {
           value={form.name}
           onChange={handleChange}
           onBlur={handleBlur}
-          className={`w-full rounded-xl px-4 py-3 bg-[#f5f5f7] outline-none focus:ring-2 ${
-            errors.name
-              ? "border border-red-500 focus:ring-red-200"
-              : "focus:ring-blue-500"
-          }`}
+          className={`w-full rounded-xl px-4 py-3 bg-[#f5f5f7] outline-none border
+            ${nameInvalid ? "border-red-500" : "border-transparent"}
+            focus:ring-2 focus:ring-blue-500`}
         />
-        {errors.name && (
-          <p className="text-sm text-red-500 mt-1">{errors.name}</p>
+        {nameInvalid && (
+          <p className="text-sm text-red-500 mt-1">
+            Name must be at least 2 characters
+          </p>
         )}
       </div>
 
@@ -96,14 +88,14 @@ export default function ContactForm({ onAdd }) {
           value={form.email}
           onChange={handleChange}
           onBlur={handleBlur}
-          className={`w-full rounded-xl px-4 py-3 bg-[#f5f5f7] outline-none focus:ring-2 ${
-            errors.email
-              ? "border border-red-500 focus:ring-red-200"
-              : "focus:ring-blue-500"
-          }`}
+          className={`w-full rounded-xl px-4 py-3 bg-[#f5f5f7] outline-none border
+            ${emailInvalid ? "border-red-500" : "border-transparent"}
+            focus:ring-2 focus:ring-blue-500`}
         />
-        {errors.email && (
-          <p className="text-sm text-red-500 mt-1">{errors.email}</p>
+        {emailInvalid && (
+          <p className="text-sm text-red-500 mt-1">
+            Invalid email format
+          </p>
         )}
       </div>
 
@@ -116,14 +108,14 @@ export default function ContactForm({ onAdd }) {
           onChange={handleChange}
           onBlur={handleBlur}
           maxLength={10}
-          className={`w-full rounded-xl px-4 py-3 bg-[#f5f5f7] outline-none focus:ring-2 ${
-            errors.phone
-              ? "border border-red-500 focus:ring-red-200"
-              : "focus:ring-blue-500"
-          }`}
+          className={`w-full rounded-xl px-4 py-3 bg-[#f5f5f7] outline-none border
+            ${phoneInvalid ? "border-red-500" : "border-transparent"}
+            focus:ring-2 focus:ring-blue-500`}
         />
-        {errors.phone && (
-          <p className="text-sm text-red-500 mt-1">{errors.phone}</p>
+        {phoneInvalid && (
+          <p className="text-sm text-red-500 mt-1">
+            Invalid phone number (10 digits required)
+          </p>
         )}
       </div>
 
@@ -134,7 +126,8 @@ export default function ContactForm({ onAdd }) {
         value={form.message}
         onChange={handleChange}
         rows={3}
-        className="w-full rounded-xl px-4 py-3 bg-[#f5f5f7] outline-none resize-none focus:ring-2 focus:ring-blue-500"
+        className="w-full rounded-xl px-4 py-3 bg-[#f5f5f7] outline-none resize-none
+                   border border-transparent focus:ring-2 focus:ring-blue-500"
       />
 
       {/* SUBMIT */}
