@@ -77,39 +77,44 @@ export default function ContactForm({ onAdd }) {
 
       {/* EMAIL */}
       <div>
-        <input
-          name="email"
-          placeholder="Email Address"
-          value={form.email}
-          onChange={handleChange}
-          className={`w-full rounded-xl px-4 py-3 bg-[#f5f5f7] outline-none border
-            ${emailInvalid ? "border-red-500" : "border-gray-300"}
-            focus:ring-2 ${emailInvalid ? "focus:ring-red-200" : "focus:ring-blue-500"}`}
-        />
-        {emailInvalid && (
-          <p className="text-sm text-red-500 mt-1">
-            Invalid email format
-          </p>
-        )}
+       <input
+  name="email"
+  placeholder="Email Address"
+  value={form.email}
+  onChange={handleChange}
+  className={`w-full rounded-xl px-4 py-3 bg-[#f5f5f7] outline-none border
+    ${emailInvalid
+      ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200"
+      : "border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+    }`}
+/>
+{emailInvalid && (
+  <p className="text-sm text-red-500 mt-1">
+    Invalid email format
+  </p>
+)}
       </div>
 
       {/* PHONE */}
       <div>
         <input
-          name="phone"
-          placeholder="10-digit Phone Number"
-          value={form.phone}
-          onChange={handleChange}
-          maxLength={10}
-          className={`w-full rounded-xl px-4 py-3 bg-[#f5f5f7] outline-none border
-            ${phoneInvalid ? "border-red-500" : "border-gray-300"}
-            focus:ring-2 ${phoneInvalid ? "focus:ring-red-200" : "focus:ring-blue-500"}`}
-        />
-        {phoneInvalid && (
-          <p className="text-sm text-red-500 mt-1">
-            Invalid phone number (10 digits required)
-          </p>
-        )}
+  name="phone"
+  placeholder="10-digit Phone Number"
+  value={form.phone}
+  onChange={handleChange}
+  maxLength={10}
+  className={`w-full rounded-xl px-4 py-3 bg-[#f5f5f7] outline-none border
+    ${phoneInvalid
+      ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200"
+      : "border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+    }`}
+/>
+{phoneInvalid && (
+  <p className="text-sm text-red-500 mt-1">
+    Invalid phone number (10 digits required)
+  </p>
+)}
+
       </div>
 
       {/* MESSAGE */}
